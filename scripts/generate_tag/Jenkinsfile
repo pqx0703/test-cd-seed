@@ -1,5 +1,7 @@
 import groovy.json.*
 
+MIGRATIONS_MAP=[:]
+
 def build_repo(job_name,tag, retry_times=1){
     if(retry_times == 5){
       println("失败次数超过 5 次，中止触发构建，请先单独运行 ${job_name}, 当前 tag 为 ${tag}")
@@ -58,14 +60,15 @@ def create_tag_for_repo(tags){
   repo_tag_mapping.each{
     def repo = it.key
     def tag = it.value
-    def migration_command = ""
     def info = config.REPO_MAP."${repo}"
     if(info && info.type == "API"){
         def parameter = params."${info.product}_${info.type}_MIGRATION"
+        def migration_command = ""
         if(parameter){
             def migration_folders = parameter.split(",")
             def command_parameter = migration_folders.join(" ")
             migration_command = "--migrations ${command_parameter}"
+            MIGRATIONS_MAP[repo] = parameter
         }
     }
     sh "python ./scripts/generate_tag/scripts/generate_tag.py create --repository ${repo} --branch ${BRANCH} --tag ${tag} ${migration_command} --migration_type ${MIGRATION_TYPE}"
@@ -76,7 +79,15 @@ def create_deploy_task(tags){
   if(env.BUMP_TYPE.startsWith("pre")){
     return
   }
-  sh "python ./scripts/generate_tag/scripts/create_deploy_task.py --repo_tags ${TAGS} --bump_type ${env.BUMP_TYPE}"
+  def migration_folders = []
+  MIGRATIONS_MAP.each {
+    migration_folders.add( "${it.key}@${it.value}")
+  }
+  def migrations_command = migration_folders.join(";")
+  if migrations_command != "" {
+    migrations_command = "--migrations" + migrations_command
+  }
+  sh "python ./scripts/generate_tag/scripts/create_deploy_task.py --repo_tags ${TAGS} ${migrations_command} --bump_type ${env.BUMP_TYPE}"
 }
 
 
