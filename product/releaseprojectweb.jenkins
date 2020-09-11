@@ -1,0 +1,27 @@
+#!/usr/bin/env groovy
+
+pipelineJob("release-project-web") {
+	description()
+	keepDependencies(false)
+	definition {
+		cpsScm {
+			scm {
+				git {
+					remote {
+						github("BangWork/bang-web", "https")
+						credentials("GITHUB_ACCOUNT_ONES")
+					}
+					branch("refs/tags/\${TAG}")
+				}
+			}
+			scriptPath("devops/production/JenkinsFile")
+		}
+	}
+	disabled(false)
+	configure {
+		it / 'properties' / 'com.coravy.hudson.plugins.github.GithubProjectProperty' {
+			'projectUrl'('https://github.com/BangWork/bang-web/')
+			displayName()
+		}
+	}
+}

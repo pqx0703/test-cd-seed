@@ -1,0 +1,41 @@
+#!/usr/bin/env groovy
+
+multibranchPipelineJob('build-wiki-api') {
+    displayName('wiki-api')
+
+    branchSources {
+        github {
+            id('wiki-api-pr')
+            repoOwner('BangWork')
+            repository('wiki-api')
+            scanCredentialsId('ones-git-credential')
+            buildOriginBranch(false)
+            buildOriginBranchWithPR(true)
+            buildForkPRHead(false)
+            buildForkPRMerge(false)
+        }
+        github {
+            id('wiki-api-master')
+            repoOwner('BangWork')
+            repository('wiki-api')
+            scanCredentialsId('ones-git-credential')
+            buildOriginBranch(true)
+            buildOriginBranchWithPR(false)
+            buildForkPRHead(false)
+            buildForkPRMerge(false)
+            includes('master')
+        }
+    }
+
+    orphanedItemStrategy {
+        discardOldItems {
+            daysToKeep(1)
+        }
+    }
+
+    factory {
+        workflowBranchProjectFactory {
+            scriptPath('devops/kubernetes/Jenkinsfile')
+        }
+    }
+}

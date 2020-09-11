@@ -1,0 +1,27 @@
+#!/usr/bin/env groovy
+
+pipelineJob('deploy-saas') {
+    displayName('deploy-saas')
+
+    parameters {
+        stringParam('projectApiTag', 'v0.0.1', 'Project API Tag')
+        stringParam('projectWebTag', 'v0.0.1', 'Project Web Tag')
+        stringParam('wikiApiTag', 'v0.0.1', 'Wiki API Tag')
+        stringParam('wikiWebTag', 'v0.0.1', 'Wiki Web Tag')
+        stringParam('devopsApiTag', 'v0.0.1', 'devops API Tag')
+    }
+
+    definition {
+        cpsScm {
+            scm {
+                git {
+                    remote {
+                        url('https://github.com/BangWork/cd-seed.git')
+                        credentials('ones-git-credential')
+                    }
+                }
+            }
+            scriptPath('kubernetes/release/saas/Jenkinsfile')
+        }
+    }
+}

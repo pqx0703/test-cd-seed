@@ -1,0 +1,43 @@
+#!/usr/bin/env groovy
+
+multibranchPipelineJob('release-project-web') {
+    displayName('project-web')
+
+    branchSources {
+        branchSource {
+            source {
+                github {
+                    id('project-web-tags')
+                    repoOwner('BangWork')
+                    repository('ones-project-web')
+                    repositoryUrl('https://github.com/BangWork/ones-project-web.git')
+                    configuredByUrl(true)
+                    credentialsId('ones-git-credential')
+                }
+            }
+            buildStrategies {
+                buildTags {
+                    atLeastDays('-1')
+                    atMostDays('30')
+                }
+            }
+        }
+    }
+
+    configure {
+        def traits = it / sources / data / 'jenkins.branch.BranchSource' / source / traits
+        traits << 'org.jenkinsci.plugins.github__branch__source.TagDiscoveryTrait'()
+    }
+
+    orphanedItemStrategy {
+        discardOldItems {
+            daysToKeep(1)
+        }
+    }
+
+    factory {
+        workflowBranchProjectFactory {
+            scriptPath('devops/kubernetes/Jenkinsfile')
+        }
+    }
+}

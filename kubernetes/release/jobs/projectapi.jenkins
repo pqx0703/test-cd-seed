@@ -1,0 +1,43 @@
+#!/usr/bin/env groovy
+
+multibranchPipelineJob('release-project-api') {
+    displayName('project-api')
+
+    branchSources {
+        branchSource {
+            source {
+                github {
+                    id('project-api-tags')
+                    repoOwner('BangWork')
+                    repository('bang-api')
+                    repositoryUrl('https://github.com/BangWork/bang-api.git')
+                    configuredByUrl(true)
+                    credentialsId('ones-git-credential')
+                }
+            }
+            buildStrategies {
+                buildTags {
+                    atLeastDays('-1')
+                    atMostDays('30')
+                }
+            }
+        }
+    }
+
+    configure {
+        def traits = it / sources / data / 'jenkins.branch.BranchSource' / source / traits
+        traits << 'org.jenkinsci.plugins.github__branch__source.TagDiscoveryTrait'()
+    }
+
+    orphanedItemStrategy {
+        discardOldItems {
+            daysToKeep(1)
+        }
+    }
+
+    factory {
+        workflowBranchProjectFactory {
+            scriptPath('devops/kubernetes/Jenkinsfile')
+        }
+    }
+}

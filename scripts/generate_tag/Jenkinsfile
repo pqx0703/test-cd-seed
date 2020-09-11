@@ -1,0 +1,176 @@
+import groovy.json.*
+
+def build_repo(job_name,tag, retry_times=1){
+    if(retry_times == 5){
+      println("失败次数超过 5 次，中止触发构建，请先单独运行 ${job_name}, 当前 tag 为 ${tag}")
+      sh "exit 1"
+    }else{
+      try{
+          build(job: "${job_name}", parameters: [string(name: 'TAG', value: tag)])
+      }catch(Exception ex){
+          println ex
+          if(!ex instanceof hudson.AbortException){
+            try{
+              input(message: "重新构建 ${job_name}? 重试次数:${retry_times}")
+            }catch(Exception ex1){
+              println("中止触发构建，请先单独运行 ${job_name}, 当前 tag 为 ${tag}")
+              sh "exit 1"
+            }
+            retry_times = retry_times+1
+            build_repo(job_name,tag,retry_times)
+          }
+      }
+    }
+}
+
+def generate_tag_mapping(tags){
+  def repo_tags = tags.split(" ")
+  def repo_tag_mapping = [:]
+  repo_tags.each{
+    def repo_and_tag = it.split("=")
+    repo_tag_mapping."${repo_and_tag[0]}"=repo_and_tag[1]
+  }
+  return repo_tag_mapping
+}
+
+def get_config(){
+  def path = "./scripts/generate_tag/scripts/release_config_use.json"
+  def json = readFile(file: path)
+  def lazyMap = new JsonSlurper().parseText(json)
+  def config = [:]
+  config.putAll(lazyMap)
+  return config
+}
+
+def generate_repo_info_mapping(config){
+  def products = config.PRODUCTS.split(",")
+  def repo_types = config.REPO_TYPES.split(",")
+  def mapping = [:]
+  products.each{product ->
+    repo_types.each{repo_type ->
+      info = [:]
+      info.product = product
+      info.type = repo_type
+      def repo = config."${product}_${repo_type}_REPO"
+      mapping."${repo}" = info
+    }
+  }
+  return mapping
+}
+
+
+def create_tag_for_repo(tags){
+  def repo_tag_mapping = generate_tag_mapping(tags)
+  def config = get_config()
+  def repo_info_mapping = generate_repo_info_mapping(config)
+  repo_tag_mapping.each{
+    def repo = it.key
+    def tag = it.value
+    def migration_command = ""
+    def info = repo_info_mapping."${repo}"
+    if(info && info.type == "API"){
+        def parameter = params."${info.product}_${info.type}_MIGRATION"
+        if(parameter){
+            def migration_folders = parameter.split(",")
+            def command_parameter = migration_folders.join(" ")
+            migration_command = "--migrations ${command_parameter}"
+        }
+    }
+    println("migration_command: ${migration_command}")
+    sh "python ./scripts/generate_tag/scripts/generate_tag.py create --repository ${repo} --branch ${BRANCH} --tag ${tag} ${migration_command} --migration_type ${MIGRATION_TYPE}"
+  }
+}
+
+def create_deploy_task(tags){
+  if(env.BUMP_TYPE.startsWith("pre")){
+    return
+  }
+  sh "python ./scripts/generate_tag/scripts/create_deploy_task.py --repo_tags ${TAGS} --bump_type ${env.BUMP_TYPE}"
+}
+
+
+def build_repos(tags){
+    def repo_tag_mapping = generate_tag_mapping(tags)
+    def job_mapping=[
+      "ones-project-web":"production/release-jobs/release-project-web",
+      "bang-api":"production/release-jobs/release-project-api",
+      "wiki-api":"production/release-jobs/release-wiki-api",
+      "wiki-web":"production/release-jobs/release-wiki-web",
+      "ones.ai":"release_website",
+      "ones-devops": "production/release-jobs/release_devops",
+      "audit-log-sync": "production/release-jobs/release-audit-log"
+    ]
+    def build_set = [:]
+    repo_tag_mapping.each{
+      def repo = it.key
+      def tag = it.value
+      if (!job_mapping.containsKey(repo)) {
+        println("未找到repo: ${repo} 的构建任务, 跳过构建")
+        return
+      }
+      def job_name = job_mapping."${repo}"
+      build_set."${job_name}" = {
+          build_repo(job_name,tag)
+      }
+    }
+    parallel(build_set)
+}
+
+pipeline {
+  agent {
+    docker {
+      image 'release-product-env'
+    }
+  }
+  environment {
+    TOKEN=""
+    IMAGE_REGISTRY = 'img.ones.pro'
+    IMAGE_PREFIX = "${IMAGE_REGISTRY}/release"
+    KUBE_CONFIG = credentials('cluster-config')
+  }
+  stages {
+    stage("Get Highest tag") {
+        steps {
+                withCredentials(
+                  bindings: [usernamePassword(credentialsId: 'GITHUB_ACCOUNT_ONES', \
+                             usernameVariable: 'GITHUB_USER', \
+                             passwordVariable: 'GITHUB_ACCESS_TOKEN')
+                ]) {
+                    sh 'python --version'
+                    sh 'git config --global url."https://${GITHUB_ACCESS_TOKEN}:x-oauth-basic@api.github.com/".insteadOf "https://api.github.com/"'
+                    sh 'sed "s/TOKEN_IN_JENKINS/${GITHUB_ACCESS_TOKEN}/g" ./scripts/generate_tag/scripts/release_config.json > ./scripts/generate_tag/scripts/release_config_use.json '
+                    script{
+                      TAGS = sh(returnStdout: true, script: 'python ./scripts/generate_tag/scripts/generate_tag.py get --repositories ${REPOS} --bump_type ${BUMP_TYPE} --semver_tag ${SEMVER_TAG} --token ${GITHUB_ACCESS_TOKEN}').trim()
+                    }
+                }
+            }
+    }
+    stage("Creating tag"){
+      steps {
+        script{
+          create_tag_for_repo(TAGS)
+        }
+      }
+    }
+    stage("Build Tag"){
+      steps{
+        script{
+          try{
+            build_repos(TAGS)
+          }catch(Exception ex){
+            timeout(time: 60, unit: 'SECONDS') {
+              input message:"前置步骤是否都已经执行完成？", ok: "是的，开始创建发布任务"
+            }
+          }
+        }
+      }
+    }
+    stage("Generate deploy task"){
+      steps{
+        script{
+          create_deploy_task(TAGS)
+        }
+      }
+    }
+  }
+}

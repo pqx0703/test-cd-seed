@@ -1,0 +1,57 @@
+#!/usr/bin/env groovy
+
+multibranchPipelineJob('build-project-web') {
+    displayName('project-web')
+
+    branchSources {
+        github {
+            id('project-web-pr')
+            repoOwner('BangWork')
+            repository('ones-project-web')
+            scanCredentialsId('ones-git-credential')
+            buildOriginBranch(false)
+            buildOriginBranchWithPR(true)
+            buildForkPRHead(false)
+            buildForkPRMerge(false)
+            defaultBranchPropertyStrategy {
+                noTriggerBranchProperty()
+            }
+        }
+        github {
+            id('object-web-pr')
+            repoOwner('BangWork')
+            repository('ones-web-app')
+            scanCredentialsId('ones-git-credential')
+            buildOriginBranch(false)
+            buildOriginBranchWithPR(true)
+            buildForkPRHead(false)
+            buildForkPRMerge(false)
+            defaultBranchPropertyStrategy {
+                noTriggerBranchProperty()
+            }
+        }
+        github {
+            id('project-web-master')
+            repoOwner('BangWork')
+            repository('ones-project-web')
+            scanCredentialsId('ones-git-credential')
+            buildOriginBranch(true)
+            buildOriginBranchWithPR(false)
+            buildForkPRHead(false)
+            buildForkPRMerge(false)
+            includes('master')
+        }
+    }
+
+    orphanedItemStrategy {
+        discardOldItems {
+            daysToKeep(1)
+        }
+    }
+
+    factory {
+        workflowBranchProjectFactory {
+            scriptPath('devops/kubernetes/Jenkinsfile')
+        }
+    }
+}

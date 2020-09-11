@@ -1,0 +1,27 @@
+#!/usr/bin/env groovy
+
+pipelineJob('deploy-dev') {
+    displayName('deploy-dev')
+
+    parameters {
+        stringParam('subdomain', 'master', '子域名')
+        stringParam('projectApiBranch', 'master', 'Project API 分支')
+        stringParam('projectWebBranch', 'master', 'Project Web 分支')
+        stringParam('wikiApiBranch', 'master', 'Wiki API 分支')
+        stringParam('wikiWebBranch', 'master', 'Wiki Web 分支')
+    }
+
+    definition {
+        cpsScm {
+            scm {
+                git {
+                    remote {
+                        url('https://github.com/BangWork/ones-ai-k8s.git')
+                        credentials('ones-git-credential')
+                    }
+                }
+            }
+            scriptPath('devops/dev/Jenkinsfile')
+        }
+    }
+}

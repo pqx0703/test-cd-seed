@@ -1,0 +1,10 @@
+bases:
+- ../../apps/ones/saas
+
+resources:
+- namespace.yaml
+
+namespace: saas
+
+patchesStrategicMerge:
+- ones.patch.yaml

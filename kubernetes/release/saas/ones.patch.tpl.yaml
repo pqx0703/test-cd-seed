@@ -1,0 +1,145 @@
+apiVersion: ones.ai/v1alpha1
+kind: OnesCluster
+metadata:
+  name: onescluster
+spec:
+  gomplate:
+    dataSources:
+      config:
+        baseURL: https://ones.ai
+
+        platform: "api.ones.ai"
+        projectAPIVersion: "2.15.0"
+        projectAPICommitHash: "d80231c0c74f62954422899120449e15df5cae5d"
+        wikiAPIVersion: "1.8.0"
+        pushData: "false"
+        isDev: "false"
+
+        wechatSupport: "true"
+        wechatProviderCorpID: PLACEHOLDER
+        wechatProviderSecret: PLACEHOLDER
+        wechatSuiteID: PLACEHOLDER
+        wechatSuiteSecret: PLACEHOLDER
+        wechatCallbackToken: PLACEHOLDER
+        wechatCallbackTokenEncodingAeskey: PLACEHOLDER
+        wechatAuthType: 0
+        wechatEnableGetCallbackIPList: "false"
+
+        blackListBanInterval": "60"
+        blackListMaxFailCount": "1000"
+        blackListCleanInterval": "300"
+
+        phoneIPRatelimitCapacity: "30"
+        phoneIPRatelimitMinInterval: "1"
+        phoneIPRatelimitEliminateInterval: "1800"
+        phoneNumberRatelimitCapacity: "5"
+        phoneNumberRatelimitMinInterval: "10"
+        phoneNumberRatelimitEliminateInterval: "7200"
+
+        projectAPIBaseURL: "https://api.ones.ai/project/v1/"
+        projectWebBaseURL: "https://ones.ai/project/"
+        #wikiWebBaseURL: "https://ones.ai/wiki/"
+        #wikiAPIBaseURL: "https://api.ones.ai/wiki/v1/"
+        onesOfficialWebsiteURL: "https://ones.ai"
+        botBaseURL: "http://172.18.249.246:9003"
+
+        emailGeneralFromName: ONES.AI
+        emailGeneralSMTPHost: smtpdm.aliyun.com
+        emailGeneralSMTPPort: 465
+        emailGeneralUser: sys@mail.al.ones.ai
+        emailGeneralSMTPPassword:  PLACEHOLDER
+        emailGeneralRfcAllowPlainTextAuthentication: "true"
+        emailGeneralConnectSecurityEncryptionType: ssl
+        emailGeneralAuthLoginType: PLAIN
+        emailNotifyFromName: ONES.AI
+        emailNotifySMTPHost: smtpdm.aliyun.com
+        emailNotifySMTPPort: 465
+        emailNotifyUser: info@mail.al.ones.ai
+        emailNotifyPassword:  PLACEHOLDER
+        emailNotifyRfcAllowPlainTextAuthentication: "true"
+        emailNotifyConnectSecurityEncryptionType: ssl
+        emailNotifyAuthLoginType: PLAIN
+
+        copyProjectTeams: "AsVKxFb7"
+
+        telesignCustomerID: PLACEHOLDER
+        telesignSecretKey: PLACEHOLDER
+        aliyunSMSAccessKey: PLACEHOLDER
+        aliyunSMSsecret: PLACEHOLDER
+
+        fileStorage: qiniu
+        qiniuAccessKey: PLACEHOLDER
+        qiniuSecretKey: PLACEHOLDER
+        qiniuPrivateBucket: private
+        qiniuPrivateDomain: dl2.ones.ai
+        qiniuPublicBucket: public
+        qiniuPublicDomain: dl3.ones.ai
+        qiniuDocPreview: ones-doc-preview
+
+        leancloudAppID: PLACEHOLDER
+        leancloudMasterKey: PLACEHOLDER
+
+        sprintTimeLineVisibility: "false"
+
+        jiraBackupMaxSize: 1073741824
+        confluenceBackupMaxSize: 1073741824
+        wordMaxSize: 104857600
+        wordZipMaxSize: 314572800
+
+        samlAutoJoinTeam: "false"
+        samlServiceProviderIssuer: ""
+        samlServiceProviderX509Key: ""
+        samlServiceProviderX509Cert: ""
+
+        ipipToken: PLACEHOLDER
+
+        workorderMiniappDefaultAppId: PLACEHOLDER
+        workorderMiniappDefaultSecret: PLACEHOLDER
+        workorderMiniappDefaultMessageId: PLACEHOLDER
+
+        enableEsFileParsingOptimization: "true"
+
+        mobileAppOnesAppID: "00000000-0000-0000-0000-000000000001"
+        mobileAppAppsSoftwareUpgradeDir: ""
+        # callBaseURLsUpdateWhiteIPList: "127.0.0.1" # 把工具放入ones-tools之后再给为域名
+        onesAppSecret: PLACEHOLDER
+
+        enableFilterMessage: "false"
+        enableListNotice: "false"
+        listLoginType: "email,wechat"
+        resourceFilterType: "whitelist"
+        resourceFilterList: ".*"
+
+        enablePlugin: "false"
+        enableAgent: "false"
+        enableElk: "false"
+
+        enableModifyLoginPageLogo: "false"
+
+        stampCachePoolSize: "2147483648" # 先给2G，不够再加
+
+        cdnSaasDomain: "https://cdn3.ones-ai.cn/"
+        officalDomain: "https://cdn2.ones-ai.cn/"
+
+        tiralOnesAIIP: "172.18.250.12"
+
+        pipelineTeamUUIDWhiteList: "GHq6q2mF,PvJyMerZ,PvTqjk9v,8QRjv7HL,9QnYLNpx,ANsJWyB8,C8QSu3Zr,EfJdQBt5,Q6Bvpc7c,QV2X8znR,RDjYMhKq,T94G6kL4,TKmSZnBP,U411EHFD,Tnb2S5Qj,RDjYMhKq,US1xmvXf,938bndAi,GhAEfxvp,6j81rjWb,TsEamJHd,E179tKU9,WNSmHWgP,GdhHaFWA,49egF9Px,A93wF1U6,RZXbTx7G,RoPBbS1k,UP2PUHbV,3ES46X61,3cKV3AqJ,4Wd3dbxV,5f6fW5vK,BBsVTeGH,DbbQaZ9J,Gh6RmExp,NAbMPd4b,S9NPLojj,URoDC7bu,W47MnCA4,WwwemdD5,AzsomcSp,6p9bY2zC,5hyStHd6,GHq6q2mF,Tnb2S5Qj,E179tKU9,49egF9Px,938bndAi,TsEamJHd,6j81rjWb,3cKV3AqJ,RD56Q3Kh,UP2PUHbV,RZXbTx7G,Gh6RmExp,NAbMPd4b,URoDC7bu,S9NPLojj,4Wd3dbxV,WwwemdD5"
+        githubClientId: PLACEHOLDER
+        githubClientSecret: PLACEHOLDER
+        gitlabClientId: PLACEHOLDER
+        gitlabClientSecret: PLACEHOLDER
+        scmOauthRedirectUrl: "https://ones.ai/project"
+        stampCachePoolSize: "10737418240"
+  onesDeployments:
+    project-api:
+      image: PLACEHOLDER
+    wiki-api:
+      image: PLACEHOLDER
+    project-web:
+      image: PLACEHOLDER
+    wiki-web:
+      image: PLACEHOLDER
+    ones-devops-api:
+      image: PLACEHOLDER
+
+  

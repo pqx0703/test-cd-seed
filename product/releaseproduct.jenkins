@@ -1,0 +1,35 @@
+pipelineJob("release_product") {
+	description()
+	keepDependencies(false)
+	parameters {
+		choiceParam("BUMP_TYPE", ["patch", "minor", "prerelease", "prepatch", "preminor", "major", "premajor"], """需要升级的版本类型，例如，当前最高版本 v2.49.0
+patch: v2.49.1
+minor: v2.50.0
+major: v3.0.0
+如果带前缀 pre，则需要根据参数 SEMVER_TAG 来决定, 如果 SEMVER_TAG 填写了 beta
+prerelease: v2.49.1-beta.1
+prepatch: v2.49.1-beta.1
+preminor: v2.50.0-beta.1
+premajor: v3.0.0-beta.1""")
+		textParam("PROJECT_API_MIGRATION", "", "Project API migration 文件夹，如果有多个 migration 文件夹则使用 , 分隔")
+		textParam("WIKI_API_MIGRATION", "", "Wiki API migration 文件夹，如果有多个 migration 文件夹则使用 , 分隔")
+		textParam("SEMVER_TAG", "beta", "配合 bump_type 最后确定 tag 号")
+		textParam("BRANCH", "master", "需要打 tag 的分支")
+		choiceParam("MIGRATION_TYPE", ["old", "new"], "是否为新迁移")
+	}
+	definition {
+		cpsScm {
+			scm {
+				git {
+					remote {
+						github("BangWork/ones-tools", "https")
+						credentials("GITHUB_ACCOUNT_ONES")
+					}
+					branch("*/cd-production")
+				}
+			}
+			scriptPath("generate_tag/Jenkinsfile")
+		}
+	}
+	disabled(false)
+}

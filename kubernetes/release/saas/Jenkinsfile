@@ -1,0 +1,69 @@
+pipeline {
+  agent any
+
+  environment {
+    IMAGE_REGISTRY = 'img.ones.pro'
+    IMAGE_PREFIX = "${IMAGE_REGISTRY}/release"
+    KUBE_CONFIG = credentials('cluster-config')
+  }
+
+  options {
+    timeout(time: 10, unit: 'MINUTES')
+    disableConcurrentBuilds()
+  }
+  
+  stages {
+    stage("Write config") {
+      steps {
+        script {
+          kustomization = readYaml file: 'devops/dev/kustomization.tpl.yaml'
+          namespace = readYaml file: 'devops/dev/namespace.tpl.yaml'
+          onespatch = readYaml file: 'devops/dev/ones.patch.tpl.yaml'
+
+          onespatch.spec.onesDeployments['project-api'].image = "${IMAGE_PREFIX}/project-api:${params.projectApiTag}"
+          onespatch.spec.onesDeployments['project-web'].image = "${IMAGE_PREFIX}/project-web:${params.projectWebTag}"
+          onespatch.spec.onesDeployments['wiki-api'].image = "${IMAGE_PREFIX}/wiki-api:${params.wikiApiTag}"
+          onespatch.spec.onesDeployments['wiki-web'].image = "${IMAGE_PREFIX}/wiki-web:${params.wikiWebTag}"
+          onespatch.spec.onesDeployments['ones-devops-api'].image = "${IMAGE_PREFIX}/wiki-web:${params.devopsApiTag}"
+
+        }
+        sh 'cd config/ones && rm -f kustomization.yaml namespace.yaml ones.patch.yaml'
+        writeYaml file: 'config/ones/kustomization.yaml', data: kustomization
+        writeYaml file: 'config/ones/namespace.yaml', data: namespace
+        writeYaml file: 'config/ones/ones.patch.yaml', data: onespatch
+        stash includes: 'config/ones/*.yaml', name: 'patch'
+
+        sh 'cd config/registry && rm -f credential.json'
+        withCredentials([usernamePassword(credentialsId: 'registry-dev-ro', usernameVariable: 'NAME', passwordVariable: 'TOKEN')]) {
+          script {
+            cred = readJSON file: 'config/registry/credential.example.json'
+            cred.name = env.NAME
+            cred.token = env.TOKEN
+            writeJSON file: 'config/registry/credential.json', json: cred
+          }
+        }
+        stash includes: 'config/registry/*.json', name: 'registry'
+      }
+    }
+
+    stage("Deploy to cluster") {
+      agent {
+        docker {
+          image '${IMAGE_REGISTRY}/library/ones-toolkit:latest'
+          registryUrl "https://${IMAGE_REGISTRY}"
+          registryCredentialsId 'registry-dev-ro'
+        }
+      }
+      steps {
+        unstash 'patch'
+        unstash 'registry'
+        sh '''
+          set -e
+          mkdir -p /root/.kube
+          cat ${KUBE_CONFIG} > /root/.kube/config
+          cd apps && make setup-ones
+        '''
+      }
+    }
+  }
+}

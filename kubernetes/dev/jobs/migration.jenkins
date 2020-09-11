@@ -1,0 +1,31 @@
+#!/usr/bin/env groovy
+
+multibranchPipelineJob('build-migration') {
+    displayName('migration')
+
+    branchSources {
+        github {
+            id('migration-dev')
+            repoOwner('BangWork')
+            repository('ones-migration')
+            scanCredentialsId('ones-git-credential')
+            buildOriginBranch(true)
+            buildOriginBranchWithPR(true)
+            buildForkPRHead(false)
+            buildForkPRMerge(false)
+            includes('dev')
+        }
+    }
+
+    orphanedItemStrategy {
+        discardOldItems {
+            daysToKeep(1)
+        }
+    }
+
+    factory {
+        workflowBranchProjectFactory {
+            scriptPath('devops/Jenkinsfile')
+        }
+    }
+}

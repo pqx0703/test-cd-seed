@@ -1,0 +1,43 @@
+#!/usr/bin/env groovy
+
+multibranchPipelineJob('release-ones-devops') {
+    displayName('ones-devops')
+
+    branchSources {
+        branchSource {
+            source {
+                github {
+                    id('ones-devops-tags')
+                    repoOwner('BangWork')
+                    repository('ones-devops')
+                    repositoryUrl('https://github.com/BangWork/ones-devops.git')
+                    configuredByUrl(true)
+                    credentialsId('ones-git-credential')
+                }
+            }
+            buildStrategies {
+                buildTags {
+                    atLeastDays('-1')
+                    atMostDays('30')
+                }
+            }
+        }
+    }
+
+    configure {
+        def traits = it / sources / data / 'jenkins.branch.BranchSource' / source / traits
+        traits << 'org.jenkinsci.plugins.github__branch__source.TagDiscoveryTrait'()
+    }
+
+    orphanedItemStrategy {
+        discardOldItems {
+            daysToKeep(1)
+        }
+    }
+
+    factory {
+        workflowBranchProjectFactory {
+            scriptPath('devops/kubernetes/Jenkinsfile')
+        }
+    }
+}
