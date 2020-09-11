@@ -170,6 +170,7 @@ pipeline {
     stage("Generate deploy task"){
       steps{
         script{
+          sh "cp ./mars /bin/mars"
           create_deploy_task(TAGS)
         }
       }
