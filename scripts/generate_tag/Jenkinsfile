@@ -47,9 +47,7 @@ def create_tag_for_repo(tags){
     def repo = it.key
     def tag = it.value
     def migration_command = ""
-    println("===> ${repo} ${tag}")
     def info = config.REPO_MAP."${repo}"
-    println("${info}")
     if(info && info.type == "API"){
         def parameter = params."${info.product}_${info.type}_MIGRATION"
         if(parameter){
@@ -59,6 +57,8 @@ def create_tag_for_repo(tags){
         }
     }
     println("migration_command: ${migration_command}")
+    println("command: ")
+    println("python ./scripts/generate_tag/scripts/generate_tag.py create --repository ${repo} --branch ${BRANCH} --tag ${tag} ${migration_command} --migration_type ${MIGRATION_TYPE}")
     sh "python ./scripts/generate_tag/scripts/generate_tag.py create --repository ${repo} --branch ${BRANCH} --tag ${tag} ${migration_command} --migration_type ${MIGRATION_TYPE}"
   }
 }
