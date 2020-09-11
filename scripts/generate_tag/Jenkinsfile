@@ -33,8 +33,6 @@ def generate_tag_mapping(tags){
   return repo_tag_mapping
 }
 
-@NonCPS
-@CompileStatic
 static def convertLazyMapToLinkedHashMap(def value) {
     if (value instanceof LazyMap) {
       Map copy = [:]
