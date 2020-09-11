@@ -95,6 +95,10 @@ def build_repos(tags){
     println("测试中，跳过构建!!!")
     return
 
+    if (env.SKIP_BUILD) {
+      return
+    }
+
     def repo_tag_mapping = generate_tag_mapping(tags)
     def job_mapping=[
       "ones-project-web":"production/release-jobs/release-project-web",
