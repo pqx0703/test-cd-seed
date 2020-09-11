@@ -36,8 +36,7 @@ def generate_tag_mapping(tags){
 def get_config(){
   def path = "./scripts/generate_tag/scripts/release_config_use.json"
   def json = readFile(file: path)
-  def jsonSlurper = new JsonSlurper()
-  def config = jsonSlurper.parse(json)
+  def config = new JsonSlurper().parseText(json)
   return config
 }
 
