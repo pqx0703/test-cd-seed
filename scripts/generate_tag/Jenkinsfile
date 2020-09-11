@@ -43,12 +43,13 @@ def get_config(){
 def create_tag_for_repo(tags){
   def repo_tag_mapping = generate_tag_mapping(tags)
   def config = get_config()
-  println("config: ${config}")
   repo_tag_mapping.each{
     def repo = it.key
     def tag = it.value
     def migration_command = ""
+    println("===> ${repo} ${tag}")
     def info = config.REPO_MAP."${repo}"
+    println("${info}")
     if(info && info.type == "API"){
         def parameter = params."${info.product}_${info.type}_MIGRATION"
         if(parameter){
