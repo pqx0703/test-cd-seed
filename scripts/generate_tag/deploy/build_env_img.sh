@@ -12,4 +12,5 @@ GOOS=linux GOARCH=amd64 GO111MODULE=on go build -o mars cli/main.go
 echo "finish build mars"
 
 cd ..
-docker build -t release-product-env .
+docker build -t img.ones.pro/release/release-product-env:latest .
+docker push img.ones.pro/release/release-product-env:latest
