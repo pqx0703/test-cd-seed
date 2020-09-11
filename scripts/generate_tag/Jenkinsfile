@@ -127,6 +127,7 @@ pipeline {
     IMAGE_REGISTRY = 'img.ones.pro'
     IMAGE_PREFIX = "${IMAGE_REGISTRY}/release"
     KUBE_CONFIG = credentials('cluster-config')
+    GITHUB_ACCESS_TOKEN = "632c15e9b2a46fc1cbe7b08f6ca5463bef50e54a"
   }
   stages {
     stage("Get Highest tag") {
