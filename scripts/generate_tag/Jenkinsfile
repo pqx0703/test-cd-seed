@@ -147,6 +147,7 @@ pipeline {
     stage("Creating tag"){
       steps {
         script{
+          println("TAGS: ${TAGS}")
           create_tag_for_repo(TAGS)
         }
       }
