@@ -36,14 +36,10 @@ def generate_tag_mapping(tags){
 def get_config(){
   def path = "./scripts/generate_tag/scripts/release_config_use.json"
   def json = readFile(file: path)
-  def config = new JsonSlurper().parseText(json)
+  def raw_config = new JsonSlurper().parseText(json)
+  def config = [:]
+  raw_config.putAll(config)
   return config
-}
-
-def do_create_tag(repo, tag, migration_command) {
-  println("!!!")
-  sh "python ./scripts/generate_tag/scripts/generate_tag.py create --repository ${repo} --branch ${BRANCH} --tag ${tag} ${migration_command} --migration_type ${MIGRATION_TYPE}"
-   println("ok ok ok")
 }
 
 def create_tag_for_repo(tags){
@@ -62,7 +58,7 @@ def create_tag_for_repo(tags){
             migration_command = "--migrations ${command_parameter}"
         }
     }
-    do_create_tag(repo, tag, migration_command)
+    sh "python ./scripts/generate_tag/scripts/generate_tag.py create --repository ${repo} --branch ${BRANCH} --tag ${tag} ${migration_command} --migration_type ${MIGRATION_TYPE}"
   }
 }
 
