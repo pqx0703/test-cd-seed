@@ -68,7 +68,7 @@ def create_tag_for_repo(tags){
             def migration_folders = parameter.split(",")
             def command_parameter = migration_folders.join(" ")
             migration_command = "--migrations ${command_parameter}"
-            MIGRATIONS_MAP[repo] = parameter
+            MIGRATIONS_MAP."${repo}" = parameter
         }
     }
     sh "python ./scripts/generate_tag/scripts/generate_tag.py create --repository ${repo} --branch ${BRANCH} --tag ${tag} ${migration_command} --migration_type ${MIGRATION_TYPE}"
@@ -81,9 +81,9 @@ def create_deploy_task(tags){
   }
   def migration_folders = []
   MIGRATIONS_MAP.each {
-    migration_folders.add( "${it.key}@${it.value}")
+    migration_folders.add("${it.key}@${it.value}")
   }
-  def migrations_command = migration_folders.join(";")
+  def migrations_command = migration_folders.join(",")
   if (migrations_command != "") {
     migrations_command = "--migrations " + migrations_command
   }
