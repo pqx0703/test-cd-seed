@@ -1,38 +1,93 @@
 {
-  "GITHUB_TOKEN": "TOKEN_IN_JENKINS",
-  "ORG_NAME": "bangwork",
+  "GITHUB_TOKEN": "632c15e9b2a46fc1cbe7b08f6ca5463bef50e54a",
+  "ORG_NAME": "pqx0703",
   "GITHUB_URL": "https://api.github.com",
-  "PRODUCTS": "PROJECT,WIKI,WEBSITE,DEVOPS,AUDITLOG",
-  "MULTIPLE_MODULE_PRODUCTS": "PROJECT,WIKI",
-  "REPO_TYPES": "API,WEB",
-  "PROJECT_API_REPO": "bang-api",
-  "PROJECT_WEB_REPO": "ones-project-web",
-  "WIKI_API_REPO": "wiki-api",
-  "WIKI_WEB_REPO": "wiki-web",
-  "DEVOPS_API_REPO": "ones-devops",
-  "WEBSITE_WEB_REPO": "ones.ai",
-  "AUDITLOG_API_REPO": "audit-log-sync",
+  "REPO_MAP": {
+    "wiki-web": {
+      "product": "WIKI",
+      "type": "WEB",
+      "text": "ONES Wiki for Web"
+    },
+    "audit-log-sync": {
+      "product": "AUDITLOG",
+      "type": "API",
+      "text": "ONES Audit Log"
+    },
+    "wiki-api": {
+      "product": "WIKI",
+      "type": "API",
+      "text": "ONES Wiki API"
+    },
+    "ones-devops": {
+      "product": "DEVOPS",
+      "type": "API",
+      "text": "ONES DevOps API"
+    },
+    "ones.ai": {
+      "product": "WEBSITE",
+      "type": "WEB",
+      "text": "ONES Official Website"
+    },
+    "ones-project-web": {
+      "product": "PROJECT",
+      "type": "WEB",
+      "text": "ONES Project for Web"
+    },
+    "bang-api": {
+      "product": "PROJECT",
+      "type": "API",
+      "text": "ONES Project API"
+    },
+    "ones-third-importer": {
+      "product": "PROJECT",
+      "type": "TOOL",
+      "text": "ONES Third Importer"
+    },
+    "ones-demo": {
+      "product": "PROJECT",
+      "type": "TOOL",
+      "text": "ONES Demo"
+    },
+    "ones-cmd-proxy-service": {
+      "product": "PROJECT",
+      "type": "TOOL",
+      "text": "ONES CMD Proxy Service"
+    },
+    "ones-mapper-attachments": {
+      "product": "PROJECT",
+      "type": "TOOL",
+      "text": "ONES Mapper Attachments"
+    },
+    "web-gateway": {
+      "product": "PROJECT",
+      "type": "TOOL",
+      "text": "ONES Web Gateway"
+    },
+    "ones-crm": {
+      "product": "PROJECT",
+      "type": "TOOL",
+      "text": "ONES CRM"
+    },
+    "product-manual": {
+      "product": "PROJECT",
+      "type": "WEB",
+      "text": "ONES Manual"
+    }
+  },
   "ONES_API_URL": "https://devapi.myones.net/{product}/master",
   "EMAIL": "wuxingjuan@ones.ai",
   "PASSWORD": "juan1997",
   "TEAM_UUID": "5r1uiFRs",
-  "DEPLOY_APPLICATION_PROJECT_UUID": "YEL8b4LVgWM3n6BK",
-  "DEPLOY_APPLICATION_ISSUE_TYPE_UUID": "Fd7VdS9X",
-  "API_ISSUE_TYPE_UUID": "KA1QspxB",
-  "WEB_ISSUE_TYPE_UUID": "KA1QspxB",
+  "DEPLOY_APPLICATION_PROJECT_UUID": "FXWjFL8RERRdheM7",
+  "DEPLOY_APPLICATION_ISSUE_TYPE_UUID": "ULtMhUWw",
+  "API_ISSUE_TYPE_UUID": "L6zfat8L",
+  "WEB_ISSUE_TYPE_UUID": "L6zfat8L",
+  "TOOL_ISSUE_TYPE_UUID": "L6zfat8L",
   "COMMIT_FIELD_UUID": "2C3W6Gvp",
   "BUILD_FIELD_UUID": "L7MzM9Lh",
-  "VERSION_FIELD_UUID": "PAySkY4n",
+  "VERSION_FIELD_UUID": "CxGYx2rm",
   "BUMP_TYPE_FIELD_UUID": "A3j2J3q8",
   "PATCH_OPTION_UUID": "HL31LkKg",
   "MINOR_OPTION_UUID": "SdDnusAB",
-  "PROJECT_TEXT": "ONES Project",
-  "WIKI_TEXT": "ONES Wiki",
-  "DEVOPS_TEXT": "ONES DevOps API",
-  "WEBSITE_TEXT": "ONES Official Website",
-  "PROJECT_API_TEXT": "ONES Project API",
-  "PROJECT_WEB_TEXT": "ONES Project for Web",
-  "WIKI_API_TEXT": "ONES Wiki API",
-  "WIKI_WEB_TEXT": "ONES Wiki for Web",
-  "AUDITLOG_TEXT": "ONES Audit Log"
+  "SUB_COM_REFERENCE_UUID": "GGYzjS4E"
 }
