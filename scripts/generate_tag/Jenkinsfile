@@ -140,6 +140,7 @@ pipeline {
                     sh 'python --version'
                     sh 'git config --global url."https://${TEMP_GITHUB_TOKEN}:x-oauth-basic@api.github.com/".insteadOf "https://api.github.com/"'
                     sh 'sed "s/TOKEN_IN_JENKINS/${TEMP_GITHUB_TOKEN}/g" ./scripts/generate_tag/scripts/release_config.json > ./scripts/generate_tag/scripts/release_config_use.json '
+                    sh 'sed "s/MARS_TOKEN/${MARS_TOKEN}/g" ./scripts/generate_tag/scripts/release_config.json > ./scripts/generate_tag/scripts/mars.yaml '
                     script{
                       TAGS = sh(returnStdout: true, script: 'python ./scripts/generate_tag/scripts/generate_tag.py get --repositories ${REPOS} --bump_type ${BUMP_TYPE} --semver_tag ${SEMVER_TAG} --token ${TEMP_GITHUB_TOKEN}').trim()
                     }
