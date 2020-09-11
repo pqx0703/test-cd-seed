@@ -84,7 +84,7 @@ def create_deploy_task(tags){
     migration_folders.add( "${it.key}@${it.value}")
   }
   def migrations_command = migration_folders.join(";")
-  if migrations_command != "" {
+  if (migrations_command != "") {
     migrations_command = "--migrations " + migrations_command
   }
   sh "python ./scripts/generate_tag/scripts/create_deploy_task.py --repo_tags ${TAGS} ${migrations_command} --bump_type ${env.BUMP_TYPE}"
