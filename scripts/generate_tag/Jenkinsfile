@@ -34,16 +34,16 @@ def generate_tag_mapping(tags){
 }
 
 static def convertLazyMapToLinkedHashMap(def value) {
-    if (value instanceof LazyMap) {
-      Map copy = [:]
-      for (pair in (value as LazyMap)) {
-        copy[pair.key] = convertLazyMapToLinkedHashMap(pair.value)
-      }
-      copy
-    } else {
-      value
+  if (value instanceof groovy.json.internal.LazyMap) {
+    Map copy = [:]
+    for (pair in (value as groovy.json.internal.LazyMap)) {
+      copy[pair.key] = convertLazyMapToLinkedHashMap(pair.value)
     }
+    copy
+  } else {
+    value
   }
+}
 
 def get_config(){
   def path = "./scripts/generate_tag/scripts/release_config_use.json"
