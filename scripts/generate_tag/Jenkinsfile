@@ -40,6 +40,12 @@ def get_config(){
   return config
 }
 
+def do_create_tag(repo, tag, migration_command) {
+  println("!!!")
+  sh "python ./scripts/generate_tag/scripts/generate_tag.py create --repository ${repo} --branch ${BRANCH} --tag ${tag} ${migration_command} --migration_type ${MIGRATION_TYPE}"
+   println("ok ok ok")
+}
+
 def create_tag_for_repo(tags){
   def repo_tag_mapping = generate_tag_mapping(tags)
   def config = get_config()
@@ -56,10 +62,7 @@ def create_tag_for_repo(tags){
             migration_command = "--migrations ${command_parameter}"
         }
     }
-    println("migration_command: ${migration_command}")
-    println("command: ")
-    println("python ./scripts/generate_tag/scripts/generate_tag.py create --repository ${repo} --branch ${BRANCH} --tag ${tag} ${migration_command} --migration_type ${MIGRATION_TYPE}")
-    sh "python ./scripts/generate_tag/scripts/generate_tag.py create --repository ${repo} --branch ${BRANCH} --tag ${tag} ${migration_command} --migration_type ${MIGRATION_TYPE}"
+    do_create_tag(repo, tag, migration_command)
   }
 }
 
