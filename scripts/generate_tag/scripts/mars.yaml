@@ -9,10 +9,10 @@ github:
   username: your_username
   password: your_password
 apollo:
-  baseurl: http://localhost:8070
+  baseurl: https://uniconfig.myones.net
   app: ones_version_manager
   cluster: default
   env: DEV
   username: onesVersionManager
-  token: dc3cdace9309ed107abae0df137be35ee16e4eec
+  token: MARS_TOKEN
 verbose: false
