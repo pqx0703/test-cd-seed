@@ -126,7 +126,6 @@ pipeline {
     TOKEN=""
     IMAGE_REGISTRY = 'img.ones.pro'
     IMAGE_PREFIX = "${IMAGE_REGISTRY}/release"
-    GITHUB_ACCESS_TOKEN = "0fafeb66654de9ec6291e9447e65775907615dc2"
   }
   stages {
     stage("Get Highest tag") {
@@ -137,9 +136,10 @@ pipeline {
                              passwordVariable: 'GITHUB_ACCESS_TOKEN')
                 ]) {
                     sh 'python --version'
+                    sh 'git config --global url."https://${GITHUB_ACCESS_TOKEN}:x-oauth-basic@api.github.com/".insteadOf "https://api.github.com/"'
                     sh 'sed "s/TOKEN_IN_JENKINS/${GITHUB_ACCESS_TOKEN}/g" ./scripts/generate_tag/scripts/release_config.json > ./scripts/generate_tag/scripts/release_config_use.json '
                     script{
-                      TAGS = sh(returnStdout: true, script: 'python ./scripts/generate_tag/scripts/generate_tag.py get --repositories ${REPOS} --bump_type ${BUMP_TYPE} --semver_tag ${SEMVER_TAG} --token 0fafeb66654de9ec6291e9447e65775907615dc2').trim()
+                      TAGS = sh(returnStdout: true, script: 'python ./scripts/generate_tag/scripts/generate_tag.py get --repositories ${REPOS} --bump_type ${BUMP_TYPE} --semver_tag ${SEMVER_TAG} --token ${GITHUB_ACCESS_TOKEN}').trim()
                     }
                 }
             }
