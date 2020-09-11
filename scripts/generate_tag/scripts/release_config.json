@@ -1,5 +1,5 @@
 {
-  "GITHUB_TOKEN": "0fafeb66654de9ec6291e9447e65775907615dc2",
+  "GITHUB_TOKEN": "TOKEN_IN_JENKINS",
   "ORG_NAME": "pqx0703",
   "GITHUB_URL": "https://api.github.com",
   "REPO_MAP": {
