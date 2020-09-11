@@ -35,6 +35,11 @@ def parse_options():
         default="patch",
         choices=BUMP_TYPES
     )
+    parser.add_argument(
+        "--migrations",
+        help="migration names",
+        default=""
+    )
     return parser.parse_args()
 
 
@@ -191,7 +196,7 @@ def generate_task(options):
             "stable": 1,
             "changed": {},
             "commit": commit,
-            "migrations": [],
+            "migrations": [m for m in options.migrations.split(",") if m.split("@")[0]==repo],
             "previous_version": "",
             "semver_tag": "",
             "bump_type": options.bump_type,
@@ -215,7 +220,7 @@ def generate_task(options):
         "stable": 1,
         "changed": changed,
         "commit": "",
-        "migrations": [],
+        "migrations": options.migrations.split(","),
         "previous_version": "",
         "semver_tag": "",
         "bump_type": options.bump_type,
