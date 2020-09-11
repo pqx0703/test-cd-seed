@@ -61,9 +61,9 @@ def create_tag_for_repo(tags){
     def repo = it.key
     def tag = it.value
     def info = config.REPO_MAP."${repo}"
+    def migration_command = ""
     if(info && info.type == "API"){
         def parameter = params."${info.product}_${info.type}_MIGRATION"
-        def migration_command = ""
         if(parameter){
             def migration_folders = parameter.split(",")
             def command_parameter = migration_folders.join(" ")
