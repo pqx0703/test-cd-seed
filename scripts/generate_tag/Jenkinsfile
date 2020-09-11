@@ -35,15 +35,14 @@ def generate_tag_mapping(tags){
 
 def get_config(){
   def path = "./scripts/generate_tag/scripts/release_config_use.json"
-  def json = readFile(file: path)
-  def config = new JsonSlurper().parseText(json)
+  def input_file = new File(path)
+  def config = new JsonSlurper().parseText(input_file.text)
   return config
 }
 
 def create_tag_for_repo(tags){
   def repo_tag_mapping = generate_tag_mapping(tags)
   def config = get_config()
-  // def repo_info_mapping = generate_repo_info_mapping(config)
   println("config: config")
   repo_tag_mapping.each{
     def repo = it.key
