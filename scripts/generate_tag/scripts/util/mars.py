@@ -3,7 +3,7 @@ import json
 import subprocess
 
 MARS_CONFIG_FILE = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), "../mars.yaml"))
+    os.path.dirname(__file__), "../mars_use.yaml"))
 
 def get_highest_ones_version():
     out = subprocess.check_output(["mars", "-c", MARS_CONFIG_FILE, 
