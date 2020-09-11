@@ -42,32 +42,32 @@ def get_config(){
   return config
 }
 
-def generate_repo_info_mapping(config){
-  def products = config.PRODUCTS.split(",")
-  def repo_types = config.REPO_TYPES.split(",")
-  def mapping = [:]
-  products.each{product ->
-    repo_types.each{repo_type ->
-      info = [:]
-      info.product = product
-      info.type = repo_type
-      def repo = config."${product}_${repo_type}_REPO"
-      mapping."${repo}" = info
-    }
-  }
-  return mapping
-}
+// def generate_repo_info_mapping(config){
+//   def products = config.PRODUCTS.split(",")
+//   def repo_types = config.REPO_TYPES.split(",")
+//   def mapping = [:]
+//   products.each{product ->
+//     repo_types.each{repo_type ->
+//       info = [:]
+//       info.product = product
+//       info.type = repo_type
+//       def repo = config."${product}_${repo_type}_REPO"
+//       mapping."${repo}" = info
+//     }
+//   }
+//   return mapping
+// }
 
 
 def create_tag_for_repo(tags){
   def repo_tag_mapping = generate_tag_mapping(tags)
   def config = get_config()
-  def repo_info_mapping = generate_repo_info_mapping(config)
+  // def repo_info_mapping = generate_repo_info_mapping(config)
   repo_tag_mapping.each{
     def repo = it.key
     def tag = it.value
     def migration_command = ""
-    def info = repo_info_mapping."${repo}"
+    def info = config.REPO_MAP."${repo}"
     if(info && info.type == "API"){
         def parameter = params."${info.product}_${info.type}_MIGRATION"
         if(parameter){
