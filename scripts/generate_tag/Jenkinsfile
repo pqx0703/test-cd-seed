@@ -96,6 +96,7 @@ def build_repos(tags){
     return
 
     if (env.SKIP_BUILD) {
+      println("跳过构建!!!")
       return
     }
 
