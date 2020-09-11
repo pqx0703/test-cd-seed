@@ -33,13 +33,25 @@ def generate_tag_mapping(tags){
   return repo_tag_mapping
 }
 
+@NonCPS
+@CompileStatic
+static def convertLazyMapToLinkedHashMap(def value) {
+    if (value instanceof LazyMap) {
+      Map copy = [:]
+      for (pair in (value as LazyMap)) {
+        copy[pair.key] = convertLazyMapToLinkedHashMap(pair.value)
+      }
+      copy
+    } else {
+      value
+    }
+  }
+
 def get_config(){
   def path = "./scripts/generate_tag/scripts/release_config_use.json"
   def json = readFile(file: path)
-  def raw_config = new JsonSlurper().parseText(json)
-  def config = [:]
-  raw_config.putAll(config)
-  return config
+  def config = new JsonSlurper().parseText(json)
+  return convertLazyMapToLinkedHashMap(config)
 }
 
 def create_tag_for_repo(tags){
