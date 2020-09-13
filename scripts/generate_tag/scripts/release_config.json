@@ -1,6 +1,6 @@
 {
   "GITHUB_TOKEN": "TOKEN_IN_JENKINS",
-  "ORG_NAME": "pqx0703",
+  "ORG_NAME": "bangwork",
   "GITHUB_URL": "https://api.github.com",
   "REPO_MAP": {
     "wiki-web": {
