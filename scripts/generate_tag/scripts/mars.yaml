@@ -14,5 +14,5 @@ apollo:
   cluster: default
   env: DEV
   username: onesVersionManager
-  token: MARS_TOKEN
+  token: MARS_APOLLO_TOKEN
 verbose: false
