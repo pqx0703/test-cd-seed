@@ -2,20 +2,10 @@
 import os
 from util.load_config import load_config
 
-ALL_REPOS = [
-    'ones-project-web',
-    'bang-api',
-    'wiki-web',
-    'wiki-api',
-    'ones-devops',
-    'audit-log-sync',
-    'ones-third-importer',
-    'ones-demo',
-    'ones-cmd-proxy-service',
-    'ones-mapper-attachments',
-    'web-gateway',
-    'ones-crm'
-]
+config = load_config(os.path.join(
+    os.path.dirname(__file__), "../release_config_use.json"))
+
+ALL_REPOS = list(config["REPO_MAP"].keys())
 
 BUMP_TYPES = [
     'patch',
@@ -26,6 +16,3 @@ BUMP_TYPES = [
     'major',
     'premajor',
 ]
-
-config = load_config(os.path.join(
-    os.path.dirname(__file__), "../release_config_use.json"))
