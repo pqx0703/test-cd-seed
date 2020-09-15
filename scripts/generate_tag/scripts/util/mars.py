@@ -21,6 +21,21 @@ def set_current_version(version_tag):
     "versions", "set-current", version_tag])
     return out
 
+def get_all_versions():
+    out = subprocess.check_output(["mars", "-c", MARS_CONFIG_FILE, 
+    "versions", "list", "--detail=true"])
+    return json.loads(out)
+
+def mark_stable(version_key):
+    out = subprocess.check_output(["mars", "-c", MARS_CONFIG_FILE, 
+    "versions", "mark-stable", version_key])
+    return out
+
+def mark_unstable(version_key):
+    out = subprocess.check_output(["mars", "-c", MARS_CONFIG_FILE, 
+    "versions", "mark-unstable", version_key])
+    return out
+
 def get_version(version_key):
     out = subprocess.check_output(["mars", "-c", MARS_CONFIG_FILE, 
     "apollo", "get", "versions", version_key])

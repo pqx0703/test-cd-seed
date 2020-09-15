@@ -124,19 +124,6 @@ def get_option_uuid(bump_type):
     return config["MINOR_OPTION_UUID"]
 
 
-def parse_task_summary(summary):
-    repo_name = None
-    version_tag = None
-    for repo, info in config["REPO_MAP"].items():
-        pp.pprint(repo)
-        pp.pprint(info)
-        pp.pprint(summary)
-        if summary.startswith(info["text"]):
-            repo_name = repo
-            version_tag = str(summary.strip(info["text"])).strip()
-    return repo_name, version_tag
-
-
 def generate_task(options):
     sub_com_ref_uuid = config["SUB_COM_REFERENCE_UUID"]
     repo_tag_mapping = {

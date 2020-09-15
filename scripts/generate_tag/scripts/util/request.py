@@ -58,8 +58,6 @@ def call_github_api_v4(query, variables):
 
 
 def call_ones_api(url, method, product, data=None, headers={}):
-    import pprint
-    pprint.pprint(product)
     base_url = config["ONES_API_URL"].format(product=product)
     final_url = "{}{}".format(base_url, url)
 
