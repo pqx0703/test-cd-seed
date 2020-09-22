@@ -6,6 +6,10 @@ pipeline {
       image 'release-product-env'
     }
   }
+  options {
+    timeout(time: 5, unit: 'MINUTES')
+    disableConcurrentBuilds()
+  }
   stages {
     stage("sync status") {
         steps {
